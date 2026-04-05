@@ -1,6 +1,7 @@
 # Git-All-MCP
 
-Local [Model Context Protocol](https://modelcontextprotocol.io) server for **any public GitHub repository**. Each tool takes `owner` and `repo` (and other parameters as needed). There is no hosted UI and no per-repo MCP URL: one process serves all repos.
+A single, local [Model Context Protocol](https://modelcontextprotocol.io) server for **all public GitHub repository**. No need to specify the repo in advance, each tool takes `owner` and `repo` (and other parameters as needed). 
+There is no hosted UI and no per-repo MCP URL: one process serves all repos.
 
 ## Install
 
