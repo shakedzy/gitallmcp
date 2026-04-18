@@ -3,19 +3,12 @@
 from __future__ import annotations
 
 import json
-from urllib.parse import urlparse
 
-import httpx
 import uvicorn
 from mcp.server.fastmcp import FastMCP
 from starlette.middleware.cors import CORSMiddleware
 
-from gitallmcp.github import (
-    MAX_GITHUB_FILE_BYTES,
-    MAX_URL_BYTES,
-    TIMEOUT_SECONDS,
-    GitHubClient,
-)
+from gitallmcp.github import MAX_GITHUB_FILE_BYTES, GitHubClient
 
 _gh: GitHubClient | None = None
 
@@ -219,41 +212,6 @@ def create_mcp(*, host: str = "127.0.0.1", port: int = 9001) -> FastMCP:
         gh = get_github()
         data = await gh.search_code(owner, repo, query, per_page=per_page)
         return _format_code_search_results(data)
-
-    @mcp.tool()
-    async def fetch_url_content(url: str) -> str:
-        """Fetch http(s) URL text for links referenced in docs. Max size ~1 MiB.
-
-        Localhost and loopback hosts are blocked. Redirects are followed.
-        """
-        parsed = urlparse(url)
-        if parsed.scheme not in ("http", "https"):
-            raise ValueError("Only http and https URLs are allowed")
-        host = (parsed.hostname or "").lower()
-        if host in ("localhost", "127.0.0.1", "::1", "0.0.0.0") or host.endswith(
-            ".localhost"
-        ):
-            raise ValueError("Refusing to fetch loopback / localhost URLs")
-
-        async with httpx.AsyncClient(
-            timeout=TIMEOUT_SECONDS,
-            follow_redirects=True,
-            headers={"User-Agent": "gitallmcp/0.1.0"},
-        ) as client:
-            async with client.stream("GET", url) as response:
-                response.raise_for_status()
-                chunks: list[bytes] = []
-                total = 0
-                async for chunk in response.aiter_bytes():
-                    total += len(chunk)
-                    if total > MAX_URL_BYTES:
-                        raise ValueError(f"Response exceeds max size ({MAX_URL_BYTES} bytes)")
-                    chunks.append(chunk)
-        raw = b"".join(chunks)
-        try:
-            return raw.decode("utf-8")
-        except UnicodeDecodeError:
-            return raw.decode("utf-8", errors="replace")
 
     return mcp
 

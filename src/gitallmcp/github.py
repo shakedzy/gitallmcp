@@ -13,7 +13,6 @@ GITHUB_API = "https://api.github.com"
 RAW_BASE = "https://raw.githubusercontent.com"
 DEFAULT_UA = "gitallmcp/0.1.0"
 MAX_GITHUB_FILE_BYTES = 2 * 1024 * 1024
-MAX_URL_BYTES = 1024 * 1024
 TIMEOUT_SECONDS = 30.0
 
 

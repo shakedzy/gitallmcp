@@ -76,7 +76,6 @@ For streamable HTTP (if your Cursor version supports URL-based MCP for this tran
 | `fetch_documentation` | `owner`, `repo` | `llms.txt` then `README.md` at repo root |
 | `search_documentation` | `owner`, `repo`, `query`, `per_page` | GitHub code search scoped to Markdown and `docs/` |
 | `search_code` | `owner`, `repo`, `query`, `per_page` | GitHub code search in the repo |
-| `fetch_url_content` | `url` | Fetch http(s) content (size-capped; localhost blocked) |
 
 Notes:
 * For every **repo-scoped** tool, `owner` and `repo` are **required**: use two arguments (e.g. `owner=vitejs`, `repo=vite`), not a combined `org/repo`, not a URL, and not blank strings. 
